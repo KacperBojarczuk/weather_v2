@@ -1,1 +1,33 @@
+version: '3.8'
 
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: weather_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  weather_fetcher:
+    build: ./backend
+    depends_on:
+      - db
+    environment:
+      OPENWEATHER_API_KEY: "5631aadabd6cdea940e74bd0d4e8cc8a"
+    restart: always
+
+volumes:
+  grafana-data:
