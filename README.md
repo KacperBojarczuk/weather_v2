@@ -4,7 +4,7 @@ Weather Monitoring System to aplikacja zbierająca dane pogodowe z zewnętrznego
 
 Projekt miał na celu zastosowanie wiedzy dotyczącej Dockera, Grafany, Prometheusa, Pythona, API oraz PostgreSQL z analizą danych.
 
-DevOps: [Kacper Bojarczuk](https://github.com/KacperBojarczuk)
+DevOps, Docker, Grafana, Prometheus: [Kacper Bojarczuk](https://github.com/KacperBojarczuk)
 
 PostgreSQL, Python, SQL: [Karol Kruszyński](https://github.com/karolkruszynski)
 
