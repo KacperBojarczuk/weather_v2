@@ -61,4 +61,3 @@ if __name__ == "__main__":
     weather_data = fetch_weather()
     if weather_data:
         save_to_db(weather_data)
-
