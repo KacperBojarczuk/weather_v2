@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 
 API_KEY = os.getenv("OPENWEATHER_API_KEY")  # Klucz API
-CITY = "Warsaw"
+CITIES = ["Warsaw", "Paris", "Berlin", "London"]
 DB_CONFIG = {
     "dbname": "weather_db",
     "user": "postgres",
@@ -16,20 +16,20 @@ DB_CONFIG = {
 
 
 def fetch_weather():
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={CITY}&appid={API_KEY}&units=metric"
-    response = requests.get(url)
-    data = response.json()
-
-    if response.status_code == 200:
-        return {
-            "city": CITY,
-            "temperature": data["main"]["temp"],
-            "humidity": data["main"]["humidity"],
-            "timestamp": datetime.utcnow()
-        }
-    else:
-        print(f"Błąd pobierania danych: {data}")
-        return None
+    data = []
+    for city in CITIES:
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data.append({
+                "city": city,
+                "temperature": response.json()["main"]["temp"],
+                "humidity": response.json()["main"]["humidity"],
+                "timestamp": datetime.utcnow()
+            })
+        else:
+            print(f"Błąd pobierania danych dla {city}: {response.json()}")
+    return data
 
 
 def save_to_db(weather_data):
@@ -58,6 +58,9 @@ def save_to_db(weather_data):
 
 
 if __name__ == "__main__":
-    weather_data = fetch_weather()
-    if weather_data:
-        save_to_db(weather_data)
+    weather_data_list = fetch_weather()
+    if weather_data_list:
+        for weather_data in weather_data_list:
+            save_to_db(weather_data)
+    else:
+        print("Brak danych pogodowych do zapisania.")
